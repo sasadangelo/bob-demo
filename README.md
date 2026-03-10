@@ -17,37 +17,32 @@ Demo application Flask containerizzata per mostrare best practices moderne a tea
 - **Flask 3.0+**
 - **uv** (package manager)
 - **Gunicorn** (WSGI server)
-- **Docker & Docker Compose**
+- **Docker/Podman**
 
 ## 🚀 Quick Start
 
 ### Prerequisiti
 
-- Docker e Docker Compose installati
+- Docker o Podman installato
 - (Opzionale) Python 3.11+ e uv per sviluppo locale
 
-### Opzione 1: Docker Compose (Consigliato)
-
-```bash
-# Build e avvio dell'applicazione
-docker-compose up --build
-
-# L'applicazione sarà disponibile su http://localhost:5000
-```
-
-### Opzione 2: Docker manuale
+### Opzione 1: Docker/Podman
 
 ```bash
 # Build dell'immagine
 docker build -t bob-demo:latest .
+# oppure con Podman
+podman build -t bob-demo:latest .
 
 # Run del container
-docker run -d -p 5000:5000 --name bob-demo bob-demo:latest
+docker run -d -p 5000:5000 --name bob-demo-app bob-demo:latest
+# oppure con Podman
+podman run -d -p 5000:5000 --name bob-demo-app bob-demo:latest
 
 # L'applicazione sarà disponibile su http://localhost:5000
 ```
 
-### Opzione 3: Sviluppo locale con uv
+### Opzione 2: Sviluppo locale con uv
 
 ```bash
 # Installa uv se non già presente
@@ -80,11 +75,11 @@ python app.py
 
 ### Per DevOps 🚀
 
-- **Containerizzazione**: Dockerfile ottimizzato con multi-stage build
-- **Orchestrazione**: Docker Compose per gestione semplificata
+- **Containerizzazione**: Dockerfile ottimizzato
 - **Health Checks**: Monitoring integrato
 - **Production Ready**: Gunicorn con worker configurabili
 - **Security**: Container non-root, minimal base image
+- **Portabilità**: Funziona con Docker e Podman
 
 ### Per Security 🔒
 
@@ -98,16 +93,24 @@ python app.py
 
 ```bash
 # Visualizza i log
-docker-compose logs -f
+docker logs -f bob-demo-app
+# oppure con Podman
+podman logs -f bob-demo-app
 
 # Ferma l'applicazione
-docker-compose down
+docker stop bob-demo-app
+# oppure con Podman
+podman stop bob-demo-app
 
-# Rebuild forzato
-docker-compose up --build --force-recreate
+# Rimuovi il container
+docker rm bob-demo-app
+# oppure con Podman
+podman rm bob-demo-app
 
 # Accedi al container
 docker exec -it bob-demo-app /bin/bash
+# oppure con Podman
+podman exec -it bob-demo-app /bin/bash
 
 # Verifica health check
 curl http://localhost:5000/health
@@ -134,9 +137,9 @@ bob-demo/
 ├── templates/
 │   └── index.html        # Template HTML
 ├── pyproject.toml        # Configurazione progetto e dipendenze
-├── Dockerfile            # Configurazione Docker
-├── docker-compose.yml    # Orchestrazione Docker Compose
+├── Dockerfile            # Configurazione Docker/Podman
 ├── .dockerignore         # File da escludere dal build
+├── .gitignore            # File da escludere da Git
 └── README.md            # Questa documentazione
 ```
 
